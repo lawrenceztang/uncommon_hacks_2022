@@ -66,6 +66,12 @@ def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
+@app.route("/viewer")
+def viewer():
+	# return the response generated along with the specific media
+	# type (mime type)
+	return render_template("viewer.html")
+
 if __name__ == '__main__':
      '''
      ap = argparse.ArgumentParser()
