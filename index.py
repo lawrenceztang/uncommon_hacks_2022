@@ -35,7 +35,7 @@ def generate():
 		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
 			bytearray(encodedImage) + b'\r\n')
 
-def detect_motion(frameCount):
+def detect_motion(frameCount=32):
 	# grab global references to the video stream, output frame, and
 	# lock variables
 	global vs, outputFrame, lock
@@ -73,12 +73,7 @@ def video_feed():
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 if __name__ == '__main__':
-     ap = argparse.ArgumentParser()
-     ap.add_argument("-i", "--ip", type=str, required=False, help="ip address of the device")
-     ap.add_argument("-o", "--port", type=int, required=False, help="ephemeral port number of the server (1024 to 65535)")
-     ap.add_argument("-f", "--frame-count", type=int, default=32, help="# of frames used to construct the background model")
-     args = vars(ap.parse_args())
-     t = threading.Thread(target=detect_motion, args=(args["frame_count"],))
+     t = threading.Thread(target=detect_motion)
      t.daemon = True
      t.start()
      app.run(threaded=True)
