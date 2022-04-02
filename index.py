@@ -10,6 +10,8 @@ import imutils
 import time
 import cv2
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 outputFrame = None
 lock = threading.Lock()
@@ -54,6 +56,10 @@ def detect_motion(frameCount=32):
 
 app = Flask(__name__)
 
+# sqlalchemy config
+engine = create_engine('sqlite:///:memory:', echo=True)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 @app.route('/')
 def index():
