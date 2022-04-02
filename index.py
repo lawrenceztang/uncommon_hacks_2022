@@ -48,13 +48,7 @@ def detect_motion(frameCount=32):
 		# convert the frame to grayscale, and blur it
 		frame = vs.read()
 		frame = imutils.resize(frame, width=400)
-		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-		gray = cv2.GaussianBlur(gray, (7, 7), 0)
-		# grab the current timestamp and draw it on the frame
 		timestamp = datetime.datetime.now()
-		cv2.putText(frame, timestamp.strftime(
-			"%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 		with lock:
 			outputFrame = frame.copy()
 
@@ -73,6 +67,13 @@ def video_feed():
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 if __name__ == '__main__':
+     '''
+     ap = argparse.ArgumentParser()
+     ap.add_argument("-i", "--ip", type=str, required=False, help="ip address of the device")
+     ap.add_argument("-o", "--port", type=int, required=False, help="ephemeral port number of the server (1024 to 65535)")
+     ap.add_argument("-f", "--frame-count", type=int, default=32, help="# of frames used to construct the background model")
+     args = vars(ap.parse_args())
+     '''
      t = threading.Thread(target=detect_motion)
      t.daemon = True
      t.start()
