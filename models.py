@@ -11,6 +11,10 @@ class User(Base):
     password = Column(String)
 
     queue = relationship("Queue", back_populates="user", useList=False)
+
+    def __init__(self, username=None, password=None):
+        self.username = username
+        self.password = password
     
     def __repr__(self):
         return f'User {self.id}'
@@ -27,12 +31,3 @@ class Queue(Base):
 
     def __repr__(self):
         return f'Queue {self.id}'
-
-def start():
-    engine = create_engine('sqlite:///:memory:')
-
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    Base.metadata.create_all(engine)
-    return engine, session
