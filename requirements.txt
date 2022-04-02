@@ -3,4 +3,3 @@ gunicorn
 numpy
 opencv-contrib-python
 imutils
-opencv-python-headless==4.2.0.32
