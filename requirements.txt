@@ -1,2 +1,10 @@
 flask
 gunicorn
+numpy
+opencv-contrib-python
+imutils
+threading
+datetime
+argparse
+time
+cv2
