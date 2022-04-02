@@ -6,6 +6,9 @@
     </head>
     <body>
         <h1>Filler</h1>
+            {% if not username: %}
+            <p><a href={{url_for('login')}}>LOGIN</a></p>
+            {% endif %}
     </body>
 </html>
 
