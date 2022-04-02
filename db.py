@@ -28,4 +28,11 @@ class Queue(Base):
     def __repr__(self):
         return f'Queue {self.id}'
 
-Base.metadata.create_all(engine)
+def start():
+    engine = create_engine('sqlite:///:memory:')
+
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    Base.metadata.create_all(engine)
+    return engine, session
