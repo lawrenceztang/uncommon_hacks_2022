@@ -1,5 +1,4 @@
 flask
 gunicorn
-numpy
 opencv-contrib-python
 imutils
