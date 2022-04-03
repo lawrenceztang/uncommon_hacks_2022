@@ -15,6 +15,28 @@ import cv2
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask_socketio import SocketIO, emit
+import simple_websocket
+
+from celery import Celery
+
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL']
+    )
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
+
 outputFrame = None
 lock = threading.Lock()
 vs = VideoStream(src=0).start()
@@ -70,6 +92,12 @@ engine = create_engine('sqlite:///:memory:', echo=True)
 app = Flask(__name__)
 app.secret_key = 'super secret key'
 app.permanent_session_lifetime = datetime.timedelta(days=365)
+app.config.update(
+    CELERY_BROKER_URL='redis://localhost:6379',
+    CELERY_RESULT_BACKEND='redis://localhost:6379'
+)
+celery = make_celery(app)
+socketio = SocketIO(app)
 
 @app.route('/')
 
@@ -137,21 +165,28 @@ def viewer():
 	return render_template("viewer.html")
 
 
-# from flask.ext.socketio import SocketIO, emit
 # socketio = SocketIO(app)
-import sched, time
-from flask_socketio import emit
+# import sched, time
+import time
 
-def change_link(sc):
-    emit('change link')
-    sc.enter(60, 1, change_link, (sc,))
+# @socketio.on('connect')
+# @celery.task()
+def change_link():
+    q = Queue.query.first()
+    if q:
+        # db_session.delete(q)
+        # db_session.commit()
+        with app.test_request_context('/'):
+            socketio.emit('change', {'link': q.video})
+    else:
+        with app.test_request_context('/'):
+            socketio.emit('change', {'link': 'nothing'})
+    print('Working')
+    # sc.enter(2, 1, change_link, (sc,))
 
-def thread():
-    import sys
-    print("Hi", file=sys.stderr)
-    s = sched.scheduler(time.time, time.sleep)
-    s.enter(60, 1, change_link, (s,))
-    s.run()
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(change_link,'interval',minutes=1)
+sched.start()
 
 if __name__ == '__main__':
      '''
@@ -165,7 +200,10 @@ if __name__ == '__main__':
      # s.enter(60, 1, change_link, (s,))
      # s.run()
 
-     t = threading.Thread(target=detect_motion)
-     t.daemon = True
-     t.start()
-     app.run(threaded=True)
+     t1 = threading.Thread(target=detect_motion)
+     t1.daemon = True
+     t1.start()
+
+     socketio.run(app)
+     # app.run(threaded=True)
+     # change_link()
