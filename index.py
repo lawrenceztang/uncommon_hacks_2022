@@ -4,6 +4,7 @@ from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 from flask import render_template
+import sched, time
 import threading
 import argparse
 import datetime
@@ -122,7 +123,6 @@ def queue():
 
 
 
-
 @app.route("/video_feed")
 def video_feed():
 	# return the response generated along with the specific media
@@ -136,6 +136,15 @@ def viewer():
 	# type (mime type)
 	return render_template("viewer.html")
 
+
+# from flask.ext.socketio import SocketIO, emit
+# socketio = SocketIO(app)
+import sched, time
+
+def change_link(sc):
+    emit('change link')
+    sc.enter(60, 1, change_link, (sc,))
+
 if __name__ == '__main__':
      '''
      ap = argparse.ArgumentParser()
@@ -144,6 +153,10 @@ if __name__ == '__main__':
      ap.add_argument("-f", "--frame-count", type=int, default=32, help="# of frames used to construct the background model")
      args = vars(ap.parse_args())
      '''
+     # s = sched.scheduler(time.time, time.sleep)
+     # s.enter(60, 1, change_link, (s,))
+     # s.run()
+
      t = threading.Thread(target=detect_motion)
      t.daemon = True
      t.start()
