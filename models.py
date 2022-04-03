@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = 'users'
-    query = db_session.query_property()
+    # query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     username = Column(String)
@@ -31,6 +31,9 @@ class Queue(Base):
     # user = relationship("User", back_populates="queue")
 
     creation_time = Column(DateTime, default=func.now())
+
+    def __init__(self, id=None):
+        self.id = id
 
     def __repr__(self):
         return f'Queue {self.id}'

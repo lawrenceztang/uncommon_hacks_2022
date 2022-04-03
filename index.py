@@ -96,6 +96,7 @@ def login():
             render_template('login.html')
         else:
             db_session.add(User(username=username,password=request.form.get('password')))
+            db_session.commit()
             session['username'] = username
             flash('User Registered')
             return redirect(url_for('index'))
@@ -110,11 +111,12 @@ def queue():
     p = User.query.filter_by(username=session['username']).first()
     q = Queue.query.filter_by(id=p.id).first()
     if not q:
-        db_session.add(p.id)
+        db_session.add(Queue(p.id))
+        db_session.commit()
         flash('Added to queue')
     else:
         flash('Already in queue')
-    return redirect(url_for(index))
+    return redirect(url_for('index'))
 
 
 
