@@ -5,3 +5,4 @@ Jinja2
 flask_socketio
 apscheduler
 sqlalchemy
+numpy
