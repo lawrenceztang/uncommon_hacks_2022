@@ -17,25 +17,6 @@ from sqlalchemy.orm import sessionmaker
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_socketio import SocketIO, emit
-import simple_websocket
-
-from celery import Celery
-
-def make_celery(app):
-    celery = Celery(
-        app.import_name,
-        backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL']
-    )
-    celery.conf.update(app.config)
-
-    class ContextTask(celery.Task):
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return self.run(*args, **kwargs)
-
-    celery.Task = ContextTask
-    return celery
 
 outputFrame = None
 lock = threading.Lock()
@@ -92,11 +73,6 @@ engine = create_engine('sqlite:///:memory:', echo=True)
 app = Flask(__name__)
 app.secret_key = 'super secret key'
 app.permanent_session_lifetime = datetime.timedelta(days=365)
-app.config.update(
-    CELERY_BROKER_URL='redis://localhost:6379',
-    CELERY_RESULT_BACKEND='redis://localhost:6379'
-)
-celery = make_celery(app)
 socketio = SocketIO(app)
 
 @app.route('/')
