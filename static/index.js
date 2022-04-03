@@ -16,6 +16,7 @@ var stream_url = "youtube.com";
 
 socket.on('change', function(event){
     var b = document.querySelector("iframe");
-    b.setAttribute("src", event.data);
-    console.log(event.data)
+    b.setAttribute("src", event.link);
+    console.log(event.link)
+    console.log(event)
 });
