@@ -111,10 +111,15 @@ def logout():
 @app.route('/queue', methods=["POST"])
 def queue():
     p = User.query.filter_by(username=session['username']).first()
-    q = Queue.query.filter_by(id=p.id).first()
+    if p:
+        q = Queue.query.filter_by(id=p.id).first()
+    else:
+        print("no p added")
+        return redirect(url_for('index'))
     print(request.form.get("link"))
     if not q:
-        db_session.add(Queue(p.id, request.form.get("link")))
+        l = request.form.get("link").replace("watch?v=","/embed/")
+        db_session.add(Queue(p.id, l))
         db_session.commit()
         flash('Added to queue')
     else:
@@ -144,23 +149,20 @@ import time
 
 # @socketio.on('connect')
 # @celery.task()
-def change_link():
+def change_link(current_video):
     q = Queue.query.first()
     if q:
         db_session.delete(q)
         db_session.commit()
         with app.test_request_context('/'):
-            socketio.emit('change', {'link': q.video})
+            socketio.emit('change', {'link': q.video, 'user': q.id})
             print(q.video)
     else:
         with app.test_request_context('/'):
-            socketio.emit('change', {'link': 'nothing'})
+            socketio.emit('change', {'link': 'https://www.youtube.com/embed/5qap5aO4i9A', 'user': None})
             print('Nothing')
     # sc.enter(2, 1, change_link, (sc,))
 
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(change_link,'interval',minutes=1)
-sched.start()
 
 if __name__ == '__main__':
      '''
@@ -177,6 +179,10 @@ if __name__ == '__main__':
      # t1 = threading.Thread(target=detect_motion)
      # t1.daemon = True
      # t1.start()
+
+     sched = BackgroundScheduler(daemon=True)
+     sched.add_job(change_link,'interval',minutes=1)
+     sched.start()
 
      socketio.run(app)
      # app.run(threaded=True)
