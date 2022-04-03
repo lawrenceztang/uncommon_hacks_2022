@@ -146,6 +146,8 @@ def change_link(sc):
     sc.enter(60, 1, change_link, (sc,))
 
 def thread():
+    import sys
+    print("Hi", file=sys.stderr)
     s = sched.scheduler(time.time, time.sleep)
     s.enter(60, 1, change_link, (s,))
     s.run()
