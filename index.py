@@ -111,8 +111,9 @@ def logout():
 def queue():
     p = User.query.filter_by(username=session['username']).first()
     q = Queue.query.filter_by(id=p.id).first()
+    print(request.form.get("link"))
     if not q:
-        db_session.add(Queue(p.id, request.form.get("link")))
+        db_session.add(Queue(p.id, request.data))
         db_session.commit()
         flash('Added to queue')
     else:
@@ -139,9 +140,9 @@ def viewer():
 # from flask.ext.socketio import SocketIO, emit
 # socketio = SocketIO(app)
 import sched, time
+from flask_socketio import emit
 
 def change_link(sc):
-    print("hi")
     emit('change link')
     sc.enter(60, 1, change_link, (sc,))
 
@@ -153,7 +154,6 @@ def thread():
     s.run()
 
 if __name__ == '__main__':
-     import sys
      '''
      ap = argparse.ArgumentParser()
      ap.add_argument("-i", "--ip", type=str, required=False, help="ip address of the device")
@@ -161,13 +161,11 @@ if __name__ == '__main__':
      ap.add_argument("-f", "--frame-count", type=int, default=32, help="# of frames used to construct the background model")
      args = vars(ap.parse_args())
      '''
+     # s = sched.scheduler(time.time, time.sleep)
+     # s.enter(60, 1, change_link, (s,))
+     # s.run()
 
-     t1 = threading.Thread(target = thread)
-     t1.start()
-
-     t2 = threading.Thread(target=detect_motion)
-     t2.daemon = True
-     t2.start()
+     t = threading.Thread(target=detect_motion)
+     t.daemon = True
+     t.start()
      app.run(threaded=True)
-     print("hi", file=sys.stderr)
-

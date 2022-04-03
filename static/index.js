@@ -18,3 +18,13 @@ socket.on('change link', function(event)){
     // b.setAttribute("src", event.data);
     console.log("1 minute passed")
 }
+
+// $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+// $(function(){
+//     $('#vote').bind('click', function()
+
+//         )
+
+//     }
+//     )

@@ -12,12 +12,16 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String)
     password = Column(String)
+    vote = Column(Integer)
+    accumulated_votes = Column(Integer)
 
     # queue = relationship("Queue", back_populates="user", useList=False)
 
-    def __init__(self, username=None, password=None):
+    def __init__(self, username=None, password=None,vote=1,accumulated_votes=0):
         self.username = username
         self.password = password
+        self.vote = vote
+        self.accumulated_votes = accumulated_votes
     
     def __repr__(self):
         return f'User {self.id}'
