@@ -1,6 +1,8 @@
 flask
 gunicorn
-numpy
 opencv-contrib-python
 imutils
+<<<<<<< HEAD
 cv2
+=======
+>>>>>>> b19856c2791cf0f88255ce473aaea88cf28469ff

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Democratic Video</title>
+    </head>
+    <body>
+        <h1>Filler</h1>
+        <video id='video' controls autoplay></video>
+        <script type="text/javascript">
+            //Selector for your <video> element
+            const video = document.getElementById("video");
+
+            //Core
+            window.navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("GET", "{{ url_for('viewer') }}", true);
+                    xhttp.send();
+                    video.srcObject = stream;
+                    video.onloadedmetadata = (e) => {
+                        video.play();
+                    };
+                })
+                .catch( () => {
+                    alert('You have give browser the permission to run Webcam and mic ;( ');
+                });
+
+        </script> 
+    </body>
+</html>
+
