@@ -14,18 +14,8 @@ var stream_url = "youtube.com";
 //     b.setAttribute("src", event.data);
 // });
 
-socket.on('change', function(data){
-    // var b = document.querySelector("iframe");
-    // b.setAttribute("src", event.data);
-    console.log("1 minute passed")
+socket.on('change', function(event){
+    var b = document.querySelector("iframe");
+    b.setAttribute("src", event.data);
+    console.log(event.data)
 });
-
-// $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-
-// $(function(){
-//     $('#vote').bind('click', function()
-
-//         )
-
-//     }
-//     )

@@ -141,7 +141,7 @@ def queue():
     q = Queue.query.filter_by(id=p.id).first()
     print(request.form.get("link"))
     if not q:
-        db_session.add(Queue(p.id, request.data))
+        db_session.add(Queue(p.id, request.form.get("link")))
         db_session.commit()
         flash('Added to queue')
     else:
@@ -174,14 +174,15 @@ import time
 def change_link():
     q = Queue.query.first()
     if q:
-        # db_session.delete(q)
-        # db_session.commit()
+        db_session.delete(q)
+        db_session.commit()
         with app.test_request_context('/'):
             socketio.emit('change', {'link': q.video})
+            print(q.video)
     else:
         with app.test_request_context('/'):
             socketio.emit('change', {'link': 'nothing'})
-    print('Working')
+            print('Nothing')
     # sc.enter(2, 1, change_link, (sc,))
 
 sched = BackgroundScheduler(daemon=True)
