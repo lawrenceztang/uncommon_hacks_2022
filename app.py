@@ -71,6 +71,7 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 app.permanent_session_lifetime = datetime.timedelta(days=365)
 socketio = SocketIO(app)
+socketio.init_app(app, cors_allowed_origins="*")
 
 @app.route('/')
 
@@ -149,7 +150,7 @@ import time
 
 # @socketio.on('connect')
 # @celery.task()
-def change_link(current_video):
+def change_link():
     q = Queue.query.first()
     if q:
         db_session.delete(q)
@@ -163,6 +164,15 @@ def change_link(current_video):
             print('Nothing')
     # sc.enter(2, 1, change_link, (sc,))
 
+
+@app.before_first_request
+def thread_start():
+    # t = threading.Thread(target = change_link)
+    # t.daemon = True
+    # t.start()
+    sched = BackgroundScheduler(daemon=True)
+    sched.add_job(change_link,'interval',minutes=1)
+    sched.start()
 
 if __name__ == '__main__':
      '''
@@ -180,9 +190,9 @@ if __name__ == '__main__':
      # t1.daemon = True
      # t1.start()
 
-     sched = BackgroundScheduler(daemon=True)
-     sched.add_job(change_link,'interval',minutes=1)
-     sched.start()
+     # sched = BackgroundScheduler(daemon=True)
+     # sched.add_job(change_link,'interval',minutes=1)
+     # sched.start()
 
      socketio.run(app)
      # app.run(threaded=True)
