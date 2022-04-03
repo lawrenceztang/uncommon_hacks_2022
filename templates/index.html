@@ -6,8 +6,22 @@
     </head>
     <body>
         <h1>Filler</h1>
+         <img src="{{ url_for('video_feed') }}">
             {% if not username: %}
             <p><a href={{url_for('login')}}>LOGIN</a></p>
+            {% else %}
+            <p><a href={{url_for('queue')}}>QUEUE</a></p>
+<!--             <form method="POST", action=''>
+                <div>
+                    <label>QUEUE</label>
+                    <input type="submit", action="login"/>
+                </div>
+            </form> -->
+            <p><a href={{url_for('logout',method='POST')}}>LOGOUT</a></p>
+            <<!-- form method='POST' action=''>
+                <label>Logout</label>
+                <input type='submit', action='logout'/>
+            </form> -->
             {% endif %}
     </body>
 </html>
