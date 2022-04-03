@@ -106,12 +106,13 @@ def logout():
     session.pop('username')
     return redirect(url_for('index'))
 
-@app.route('/queue')
+@app.route('/queue', methods=["POST"])
 def queue():
     p = User.query.filter_by(username=session['username']).first()
     q = Queue.query.filter_by(id=p.id).first()
+    print(request.form.get("link"))
     if not q:
-        db_session.add(Queue(p.id))
+        db_session.add(Queue(p.id, request.data))
         db_session.commit()
         flash('Added to queue')
     else:

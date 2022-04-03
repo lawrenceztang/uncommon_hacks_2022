@@ -26,14 +26,16 @@ class Queue(Base):
     __tablename__ = 'queue'
 
     id = Column(Integer, primary_key=True)
+    video = Column(String)
 
     # user_id = Column(Integer, ForeignKey('user.id'))
     # user = relationship("User", back_populates="queue")
 
     creation_time = Column(DateTime, default=func.now())
 
-    def __init__(self, id=None):
+    def __init__(self, id=None, video=None):
         self.id = id
+        self.video = video
 
     def __repr__(self):
         return f'Queue {self.id}'
