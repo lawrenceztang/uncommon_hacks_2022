@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html>
+
+<h1> Sign In</h1>
+<form method="POST", action=''>
+    <div class='field'>
+        <label>Username</label>
+        <input class="input", type="username", name="username", value={{request.form['password']}}/>
+    </div>
+    <div class='field'>
+        <label>Password</label>
+        <input class="input", type="password", name="password", value={{request.form['password']}}/>
+    </div>
+    <div>
+        <label>Login</label>
+        <input type="submit", action="login"/>
+    </div>
+</form>
+</html>
