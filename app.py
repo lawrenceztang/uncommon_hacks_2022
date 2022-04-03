@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect,\
  url_for, flash, make_response, session
-from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 from flask import render_template
@@ -19,7 +18,7 @@ from flask_socketio import SocketIO, emit
 
 outputFrame = None
 lock = threading.Lock()
-vs = VideoStream(src=0).start()
+# vs = VideoStream(src=0).start()
 
 def generate():
 	# grab global references to the output frame and lock variables
@@ -176,9 +175,9 @@ if __name__ == '__main__':
      # s.enter(60, 1, change_link, (s,))
      # s.run()
 
-     t1 = threading.Thread(target=detect_motion)
-     t1.daemon = True
-     t1.start()
+     # t1 = threading.Thread(target=detect_motion)
+     # t1.daemon = True
+     # t1.start()
 
      socketio.run(app)
      # app.run(threaded=True)

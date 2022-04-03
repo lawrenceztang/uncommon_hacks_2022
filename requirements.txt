@@ -1,6 +1,5 @@
 flask
 gunicorn
-imutils
 Jinja2
 flask_socketio
 apscheduler
