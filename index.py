@@ -146,6 +146,13 @@ def change_link(sc):
     emit('change link')
     sc.enter(60, 1, change_link, (sc,))
 
+def thread():
+    import sys
+    print("Hi", file=sys.stderr)
+    s = sched.scheduler(time.time, time.sleep)
+    s.enter(60, 1, change_link, (s,))
+    s.run()
+
 if __name__ == '__main__':
      '''
      ap = argparse.ArgumentParser()
