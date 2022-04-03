@@ -55,13 +55,17 @@ def detect_motion(frameCount=32):
 		with lock:
 			outputFrame = frame.copy()
 
-from config import Config
-import datetime
 
+from database import init_db
+
+init_db()
+
+from database import db_session
+from models import User, Queue
 # sqlalchemy config
 engine = create_engine('sqlite:///:memory:', echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
+# Session = sessionmaker(bind=engine)
+# session = Session()
 app = Flask(__name__)
 app.secret_key = 'super secret key'
 app.permanent_session_lifetime = datetime.timedelta(days=365)
@@ -75,18 +79,42 @@ def index():
         username = False
     return render_template('index.html', username = username)
 
-@app.route('/login', methods=['GET', 'POST']) 
+@app.route('/login', methods=['GET', 'POST', 'DESTROY']) 
 def login():
+    username = request.form.get('username')
     if request.method == 'GET':
         return render_template('login.html')
     elif request.method == 'POST':
-        session['username'] = request.form['username']
-        redirect(url_for('index'))
+        p = User.query.filter_by(username=username).first()
+        print(p)
+        password = request.form.get('password')
+        if p and (p.password == request.form.get('password')):
+            flash('Successful Login')
+            return redirect(url_for('index'))
+        elif p:
+            flash('Username Already Exists')
+            render_template('login.html')
+        else:
+            db_session.add(User(username=username,password=request.form.get('password')))
+            session['username'] = username
+            flash('User Registered')
+            return redirect(url_for('index'))
 
-@app.route('/queue',methods=['POST'])
+@app.route('/logout')
+def logout():
+    session.pop('username')
+    return redirect(url_for('index'))
+
+@app.route('/queue')
 def queue():
-    if request.method == 'POST':
-        redirect(url_for(index))
+    p = User.query.filter_by(username=session['username']).first()
+    q = Queue.query.filter_by(id=p.id).first()
+    if not q:
+        db_session.add(p.id)
+        flash('Added to queue')
+    else:
+        flash('Already in queue')
+    return redirect(url_for(index))
 
 
 
