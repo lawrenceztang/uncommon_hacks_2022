@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-
-<script src="{{url_for('static', filename='index.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script>
+  $SCRIPT_ROOT = {{ request.script_root|tojson }};
+</script>
+<script type="module" src="{{url_for('static', filename='index.js')}}"></script>
 
 <html>
     <head>
@@ -9,7 +12,7 @@
     <body>
         <h1>Filler</h1>
         <div>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/tLK6oXRqNSw?autoplay=1" allow='autoplay' frameborder="0" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/tLK6oXRqNSw?autoplay=1" allow='autoplay' frameborder="0" allowfullscreen id="ylink"></iframe>
             <button id="vote">Like</button>
         </div>
         {% with messages = get_flashed_messages() %}
@@ -24,10 +27,10 @@
             {% if not username: %}
             <p><a href={{url_for('login')}}>LOGIN</a></p>
             {% else %}
-            <form method="POST" action={{url_for('queue')}}>
+            <form method="POST" action='queue'>
                 <label for="text">Link to stream</label>
                 <input type="text" name="link" id="link">
-                <input type="submit" value="QUEUE">
+                <input type="submit" value="QUEUE", action='queue'/>
             </form>
 
 <!--             <form method="POST", action=''>

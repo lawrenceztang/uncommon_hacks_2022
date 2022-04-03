@@ -1,6 +1,7 @@
 // const socket = new WebSocket('ws://localhost:8080');
-var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-stream_url = "youtube.com"
+// import io from 'socket.io-client/dist/socket.io';
+const socket = io.connect('ws://127.0.0.1:5000/');
+var stream_url = "youtube.com";
 
 // Connection opened
 // socket.addEventListener('open', function (event) {
@@ -13,18 +14,8 @@ stream_url = "youtube.com"
 //     b.setAttribute("src", event.data);
 // });
 
-socket.on('change link', function(event)){
-    // var b = document.querySelector("iframe");
-    // b.setAttribute("src", event.data);
-    console.log("1 minute passed")
-}
-
-// $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-
-// $(function(){
-//     $('#vote').bind('click', function()
-
-//         )
-
-//     }
-//     )
+socket.on('change', function(event){
+    var b = document.querySelector("iframe");
+    b.setAttribute("src", event.data);
+    console.log(event.data)
+});
