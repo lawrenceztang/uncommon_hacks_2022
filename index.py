@@ -140,6 +140,7 @@ def viewer():
 # from flask.ext.socketio import SocketIO, emit
 # socketio = SocketIO(app)
 import sched, time
+from flask_socketio import emit
 
 def change_link(sc):
     emit('change link')
