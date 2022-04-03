@@ -23,7 +23,12 @@
             {% if not username: %}
             <p><a href={{url_for('login')}}>LOGIN</a></p>
             {% else %}
-            <p><a href={{url_for('queue')}}>QUEUE</a></p>
+            <form method="POST" action={{url_for('queue')}}>
+                <label for="text">Link to stream</label>
+                <input type="text" name="link" id="link">
+                <input type="submit" value="QUEUE">
+            </form>
+
 <!--             <form method="POST", action=''>
                 <div>
                     <label>QUEUE</label>
