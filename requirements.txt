@@ -3,3 +3,6 @@ gunicorn
 opencv-contrib-python
 imutils
 Jinja2
+flask_socketio
+apscheduler
+sqlalchemy
