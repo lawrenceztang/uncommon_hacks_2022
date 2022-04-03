@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 
+<script src="{{url_for('static', filename='index.js')}}"></script>
+
 <html>
     <head>
         <title>Democratic Video</title>
     </head>
     <body>
         <h1>Filler</h1>
-         <img src="{{ url_for('video_feed') }}">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/tLK6oXRqNSw?autoplay=1" allow='autoplay' frameborder="0" allowfullscreen></iframe>
             {% if not username: %}
             <p><a href={{url_for('login')}}>LOGIN</a></p>
             {% else %}
